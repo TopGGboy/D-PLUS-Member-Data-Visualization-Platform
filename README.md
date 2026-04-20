@@ -1,6 +1,6 @@
-# JD PLUS Member Data Visualization Platform
+# D PLUS Member Data Visualization Platform
 
-简体中文 | [English](./README_EN.md)
+简体中文
 
 > 基于 Django + ECharts 的京东 PLUS 会员数据分析可视化平台
 
