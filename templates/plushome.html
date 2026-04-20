@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据可视化</title>
+    <link rel="stylesheet" href="/static/css/index.css" />
+  </head>
+  <body>
+    <!-- 头部 -->
+    <header>
+      <h1>京东PLUS会员可视化面板</h1>
+      <div class="show-time"></div>
+      <script>
+        var t = null;
+        t = setTimeout(time, 1000); //开始运行
+        function time() {
+          clearTimeout(t); //清除定时器
+          dt = new Date();
+          var y = dt.getFullYear();
+          var mt = dt.getMonth() + 1;
+          var day = dt.getDate();
+          var h = dt.getHours(); //获取时
+          var m = dt.getMinutes(); //获取分
+          var s = dt.getSeconds(); //获取秒
+          document.querySelector(".show-time").innerHTML =
+            "当前时间：" +
+            y +
+            "年" +
+            mt +
+            "月" +
+            day +
+            "日-" +
+            h +
+            "时" +
+            m +
+            "分" +
+            s +
+            "秒";
+          t = setTimeout(time, 1000); //设定定时器，循环运行
+        }
+      </script>
+    </header>
+    <!-- 页面主体 -->
+    <section class="mainbox">
+      <!-- 左侧盒子 -->
+      <div class="column">
+        <h1>PLUS用户信息</h1>
+        <div class="panel bar">
+          <h2>柱形图-Plus用户学历分布</h2>
+          <!-- 图表放置盒子 -->
+          <div class="chart" id="user_edu"></div>
+          <!-- 伪元素绘制盒子下边角 -->
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line">
+          <h2>饼图-用户性别比例分布
+          </h2>
+          <div class="chart"  id ='user_sex'></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie">
+          <h2>饼形图-Plus用户城市分布</h2>
+          <div class="chart" id = 'user_city'></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+      <!-- 中间盒子 -->
+      <div class="column">
+        <!-- 头部 no模块 -->
+        <div class="no">
+          <div class="no-hd">
+            <ul>
+              <li>12434</li>
+              <li>10983</li>
+            </ul>
+          </div>
+          <div class="no-bd">
+            <ul>
+              <li>PLUS正式会员总人数</li>
+              <li>PLUS试用会员总人数</li>
+            </ul>
+          </div>
+        </div>
+        <!-- map模块 -->
+        <div class="map">
+          <h1>PLUS会员每日各状态(拉新、续费、召回)开通会员数分析</h1>
+          <div class="chart" id="plus_uds"></div>
+        </div>
+      </div>
+      <!-- 右侧盒子 -->
+      <div class="column">
+        <h1>PLUS会员变化信息</h1>
+        <div class="panel bar2">
+          <h2>PLUS累计在籍会员数趋势分析</h2>
+          <div class="chart" id = 'plus_acc'></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line2">
+          <h2>PLUS在籍会员中新会员VS老会员比例</h2>
+          <div class="chart" id ="plusold_new_plus"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie2">
+          <h2>PLUS会员开通次数分布分析</h2>
+          <div class="chart" id ='plususer_times'></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+    </section>
+    <script src="/static/js/flexible.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/china.js"></script>
+    <!--<script src="../static/js/index.js"></script>-->
+
+
+    <!-- 面板左侧数据展示-->
+   <script type="text/javascript">
+    /* --------------------用户学历分布----------------------- */
+    $.get('/useredu/', function (data) {
+        var xaxle = new Array();
+        var yaxle = new Array();
+        for (var key in data) {
+            xaxle[key] = data[key].edu
+            yaxle[key] = data[key].num
+        }
+        var myChart = echarts.init(document.getElementById('user_edu'));
+        option = {
+            textStyle: {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    fontWeight:'bolder'
+                },
+            lineStyle:{color: 'rgba(255, 255, 255, 0.5)'},
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                 x: 40,
+                 y:10,
+                 x2: 100,
+                 y2: 100,
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true,
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: xaxle,
+                    axisTick: {
+                        alignWithLabel: true,
+                    },
+                    axisLabel: {
+                        color: '#fff'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitLine:{show: false},
+                    axisLabel: {
+                        color: '#fff'
+                    }
+                }
+            ],
+            series: [
+                {
+                    type: 'bar',
+                    barWidth: '50%',
+
+                    data: yaxle,
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }, "json");
+
+      /* --------------------用户性别分布----------------------- */
+    $.get('/usersex/', function (data) {
+        var sex_data = new Array()
+        for (var i=0; i<data.length;i++){
+
+            sex_data[i] = {value:data[i].num,name:data[i].sex};
+            console.info(sex_data[i])
+        }
+
+        var myChart = echarts.init(document.getElementById('user_sex'));
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'right',
+                data: sex_data,
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    color: ['#51CEC6','#FFB703'],
+                    data: sex_data,
+                    label: {
+                        color: '#fff'
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }, "json");
+
+
+     /* --------------------用户城市分布----------------------- */
+    $.get('/usercity/', function (data) {
+        var series_data = new Array()
+        for (var i=0; i<data.length;i++){
+
+            series_data[i] = {value:data[i].num,name:data[i].city};
+            console.info(series_data[i])
+        }
+
+        var myChart = echarts.init(document.getElementById('user_city'));
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'right',
+                data: series_data,
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    color: ['#51CEC6','#FFB703','#5FA0FA','#94d6da'],
+                    data: series_data,
+                    label: {
+                        color: '#fff'
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }, "json");
+
+
+</script>
+
+    <!-- 面板右侧数据展示-->
+   <script type="text/javascript">
+
+    /* --------------------PLUS累计在籍会员数趋势分析----------------------- */
+    $.get('/plusacc/', function (data) {
+        var xaxle = new Array();
+        var yaxle = new Array();
+        for (var key in data) {
+            xaxle[key] = data[key].date
+            yaxle[key] = data[key].forming_cnt
+        }
+        var myChart = echarts.init(document.getElementById('plus_acc'));
+        var option = {
+        color: ['#00f2f1'],
+        tooltip: {
+          trigger: 'axis'
+        },
+        // 图例组件
+        legend: {
+              textStyle: {
+                color: '#fff'
+              },
+              right: '10%',
+            },
+        grid: {
+          top: "20%",
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+          show: false, // 显示边框
+          borderColor: '#012f4a' // 边框颜色
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false, // 去除轴间距
+          //data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          data:xaxle,
+          // 去除刻度线
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+          color: "#4c9bfb", // x轴文本颜色
+          interval: 0,
+          rotate: '70',
+          },
+
+        },
+        yAxis: {
+          type: 'value',
+          // 去除刻度线
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            color: "#4c9bfb" // x轴文本颜色
+          },
+          splitLine: {
+            lineStyle: {
+              color: "#012f4a"
+            }
+          }
+        },
+        series: [{
+            type: 'line',
+            smooth: true, // 圆滑的线
+            data: yaxle
+          }
+        ]
+      };
+        myChart.setOption(option);
+    }, "json");
+
+      /* --------------------PLUS在籍会员中新会员VS老会员比例---------------------- */
+    $.get('/plusold_new_plus/', function (data) {
+        var oldandnew = new Array()
+        for (var i=0; i<data.length;i++){
+
+            oldandnew[i] = {value:data[i].num,name:data[i].is_1st};
+            console.info(oldandnew[i])
+        }
+
+        var myChart = echarts.init(document.getElementById('plusold_new_plus'));
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'right',
+                data: oldandnew,
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    color: ['#51CEC6','#FFB703'],
+                    data: oldandnew,
+                    label: {
+                        color: '#fff'
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }, "json");
+
+
+     /* --------------------PLUS会员开通次数分布分析--------------------- */
+      $.get('/plususer_times/', function (data) {
+        var xaxle = new Array();
+        var yaxle = new Array();
+        for (var key in data) {
+            xaxle[key] = data[key].times
+            yaxle[key] = data[key].num
+        }
+        var myChart = echarts.init(document.getElementById('plususer_times'));
+        option = {
+            textStyle: {
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    fontWeight:'bolder'
+                },
+            lineStyle:{color: 'rgba(255, 255, 255, 0.5)'},
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                 x: 40,
+                 y:10,
+                 x2: 100,
+                 y2: 100,
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true,
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: xaxle,
+                    axisTick: {
+                        alignWithLabel: true,
+                    },
+                    axisLabel: {
+                        color: '#fff'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitLine:{show: false},
+                    axisLabel: {
+                        color: '#fff'
+                    }
+                }
+            ],
+            series: [
+                {
+                    type: 'bar',
+                    barWidth: '50%',
+
+                    data: yaxle,
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }, "json");
+
+
+</script>
+
+    <!-- 面板中间数据展示-->
+   <script type="text/javascript">
+
+    /* --------------------PLUS累计在籍会员数趋势分析----------------------- */
+    $.get('/plus_uds/', function (data) {
+
+        var date = new Array();
+        var add_1st_form_cnt = new Array();
+        var renew_form_cnt = new Array();
+        var Loss_renew_form_cnt = new Array();
+
+        for (var key in data) {
+            date[key] = data[key].date
+            add_1st_form_cnt[key] = data[key].add_1st_form_cnt
+            renew_form_cnt[key] = data[key].renew_form_cnt
+            Loss_renew_form_cnt[key] = data[key].Loss_renew_form_cnt
+        }
+        var myChart = echarts.init(document.getElementById('plus_uds'));
+
+        var option = {
+            color: ['#00EE00', '#FF9F7F','#00f2f1'],
+             tooltip : {
+                    trigger: 'axis'
+                },
+            // 图例组件
+            legend: {
+                orient: 'horizontal',
+                top:80,
+                left: 'right',
+                data:['拉新','续费','召回'],
+                textStyle: {
+                    color: 'rgba(255, 255, 255, 0.9)'
+                }
+            },
+            grid: {
+              top: "20%",
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true,
+              show: false, // 显示边框
+              borderColor: '#012f4a' // 边框颜色
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false, // 去除轴间距
+              data:date,
+              // 去除刻度线
+              axisTick: {
+                show: false
+              },
+              axisLabel: {
+              color: "#4c9bfb", // x轴文本颜色
+              interval: 0,
+              rotate: '70',
+              },
+
+            },
+            yAxis: {
+              type: 'value',
+              axisTick: {
+                show: false
+              },
+              axisLabel: {
+                color: "#4c9bfb" // x轴文本颜色
+              },
+              splitLine: {
+                lineStyle: {
+                  color: "#012f4a"
+                }
+              }
+            },
+            series: [{
+                name:'拉新',
+                type: 'line',
+                smooth: true, // 圆滑的线
+                data: add_1st_form_cnt
+              },
+              {
+                name:'续费',
+                type: 'line',
+                smooth: true, // 圆滑的线
+                data: renew_form_cnt
+              },
+              {
+                name:'召回',
+                type: 'line',
+                smooth: true, // 圆滑的线
+                data: Loss_renew_form_cnt
+              }
+            ]
+          };
+           myChart.setOption(option);
+        }, "json");
+  </script>
+  </body>
+</html>

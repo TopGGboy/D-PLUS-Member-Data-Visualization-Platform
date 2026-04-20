@@ -1,0 +1,51 @@
+1. 创建项目应用
+python .\manage.py startapp PLUSUser
+
+2. 执行数据库迁移
+python .\manage.py migrate
+
+3. 修改数据配置settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "jdplus",
+        'HOST': "127.0.0.1",
+        'PORT': 3306,
+        'USER': "root",
+        'PASSWORD': "root"
+    }
+}
+
+4. 修改电商可视化项目下的__init__.py
+import pymysql
+pymysql.install_as_MySQLdb()
+
+5. 使用inspectdb生成模型
+python .\manage.py inspectdb > PLUSUser/models.py
+
+6. 数据库迁移同步
+python .\manage.py migrate
+
+7. 将static拷贝到项目根目录
+
+8. 在DjangoPlus/DjangoPlus/settings.py下注释代码如下程序:'django.middleware.csrf.CsrfViewMiddleware'是Django的中间件，CSRF是Cross Site Request Forgery的缩写，称其为“跨站请求伪造”；
+先将其注释，这样可以顺利通过post请求。
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+9. 注册应用
+把新定义的应用注册到INSTALLED_APPS中
+
+10. 再setting.py修改templates的所在位置
+
+11. 再templates目录下创建html
+
+12. 启动项目
+python  manage.py runserver 127.0.0.1:8000
