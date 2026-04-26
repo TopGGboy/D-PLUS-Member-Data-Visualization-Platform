@@ -1,5 +1,7 @@
 # JD PLUS Member Data Visualization Platform
 
+简体中文
+
 > 基于 Django + ECharts 的京东 PLUS 会员数据分析可视化平台
 
 ## 📖 项目简介
@@ -17,13 +19,13 @@
 
 ## 🛠 技术栈
 
-| 类别   | 技术                               |
-|------|----------------------------------|
-| 后端框架 | Django 5.x                       |
-| 数据库  | MySQL 8.0                        |
+| 类别 | 技术 |
+|------|------|
+| 后端框架 | Django 5.x |
+| 数据库 | MySQL 8.0 |
 | 前端框架 | HTML5 + CSS3 + JavaScript (ES6+) |
-| 图表库  | ECharts 5.x                      |
-| 工具库  | jQuery 3.x                       |
+| 图表库 | ECharts 5.x |
+| 工具库 | jQuery 3.x |
 
 ## 📁 项目结构
 
@@ -64,8 +66,7 @@ cd jd-plus-visualization
 2. **创建数据库**
 
 ```sql
-CREATE
-DATABASE jdplus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE jdplus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 3. **安装依赖**
@@ -125,15 +126,15 @@ python manage.py runserver
 
 ## 📡 API 接口
 
-| 接口路径                | 说明        |
-|---------------------|-----------|
-| `useredu/`          | 用户学历分布    |
-| `usercity/`         | 用户城市分布    |
-| `usersex/`          | 用户性别分布    |
-| `plusacc/`          | 累计在籍会员数趋势 |
-| `plusold_new_plus/` | 新老会员比例    |
-| `plususer_times/`   | 开通次数分布    |
-| `plus_uds/`         | 每日会员状态变化  |
+| 接口路径 | 说明 |
+|----------|------|
+| `useredu/` | 用户学历分布 |
+| `usercity/` | 用户城市分布 |
+| `usersex/` | 用户性别分布 |
+| `plusacc/` | 累计在籍会员数趋势 |
+| `plusold_new_plus/` | 新老会员比例 |
+| `plususer_times/` | 开通次数分布 |
+| `plus_uds/` | 每日会员状态变化 |
 
 ## 📝 相关资料
 
